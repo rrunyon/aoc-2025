@@ -13,7 +13,7 @@ async function solution() {
     if (direction === 'L') {
       for (let i = 0; i < turns; i++) {
         dial--;
-        if (dial === 0) zeroCount++
+        if (dial === 0) zeroCount++;
         if (dial === -1) dial = 99;
       }
     } else {
