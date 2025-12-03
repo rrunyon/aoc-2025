@@ -1,6 +1,3 @@
-// Build map of id => number of invalid ids up to and including the current id. Then to count invalid ids per range,
-// subtract the number of invalids at the lower end from the upper end. Sum the differences for all ranges.
-
 import { readFile } from 'fs/promises';
 
 async function solution() {

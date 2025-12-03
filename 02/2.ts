@@ -1,33 +1,53 @@
 import { readFile } from 'fs/promises';
 
 async function solution() {
-  let input = (await readFile('./01/input.txt', 'utf8')).split('\n') as Array<string>;
-
-  let dial = 50;
-  let zeroCount = 0;
+  let input = (await readFile('./02/input.txt', 'utf8')).split('\n') as Array<string>;
   
-  for (const rotation of input) {
-    let direction = rotation.charAt(0);
-    let turns = Number(rotation.slice(1));
+  let ranges: Array<[number, number]> = [];
+  for (const line of input) {
+    const rangeStrings = line.split(',');
 
-    if (direction === 'L') {
-      for (let i = 0; i < turns; i++) {
-        dial--;
-        if (dial === 0) zeroCount++;
-        if (dial === -1) dial = 99;
-      }
-    } else {
-      for (let i = 0; i < turns; i++) {
-        dial++;
-        if (dial === 100) {
-          zeroCount++;
-          dial = 0;
-        }
-      }
+    for (const range of rangeStrings) {
+      let [left, right] = range.split('-').map(Number);
+      if (left && right) ranges.push([left, right]);
     }
   }
 
-  return zeroCount;
+  let result = BigInt(0);
+
+  for (const [rangeMin, rangeMax] of ranges) {
+    for (let i = rangeMin; i <= rangeMax; i++) {
+      if (isInvalid(i)) result += BigInt(i);
+    }
+  }
+
+  return result;
+}
+
+function isInvalid(id: number): boolean {
+  let idString = String(id);
+
+  for (let i = 1; i < idString.length; i++) {
+    if (idString.length % i === 0) {
+      let current = idString.slice(0, i);
+      let next = "";
+      let allMatching = true;
+
+      for (let j = i; j < idString.length; j += i) {
+        next = current;
+        current = idString.slice(j, i + j);
+
+        if (next !== current) {
+          allMatching = false;
+          break;
+        }
+      }
+
+      if (allMatching) return true;
+    }
+  }
+
+  return false;
 }
 
 console.log(await solution());
