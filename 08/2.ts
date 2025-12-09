@@ -20,20 +20,15 @@ async function solution() {
     uf.add(row);
   }
 
-  for (let i = 0; i < 1000; i++) {
+  let i = -1;
+  while (uf.componentSize(input[0]!) < input.length) {
+    i++;
     let pair = distances[i]![1];
     uf.merge(pair[0], pair[1]);
   }
 
-  // Only count entries that are still roots to avoid stale sizes.
-  const sizes = Array.from(uf.parents.entries())
-    .filter(([node, parent]) => node === parent)
-    .map(([node]) => uf.sizes.get(node) ?? 0)
-    .sort((a, b) => b - a);
-  let result = 1;
-  for (let i = 0; i < 3; i++) result *= sizes[i]!;
-
-  return result;
+  let pair = distances[i]![1].map(pos => pos.split(',').map(Number));
+  return pair[0]![0]! * pair[1]![0]!;
 }
 
 function getDistance(a: string, b: string): number {
